@@ -1,11 +1,26 @@
-import React from "react";
+import React , {useState} from "react";
 import '../Auth_form.scss'
-import { Link } from "react-router";
+import { Link ,useNavigate} from "react-router";
+import {useAuth} from '../hooks/useAuth.js'
+
 const Login = () => {
 
-  const handleSubmit = (e)=>{
+  const {loading , handleLogin}= useAuth();
+  const navigate = useNavigate();
+
+  const [email, setEmail] = useState("")
+  const [password, setPassword] = useState("")
+
+  const handleSubmit = async (e) =>{
     e.preventDefault();
+    await handleLogin({email ,password});
+    navigate('/');
   }
+
+  if(loading){
+    return(<main><h1>Loading.......</h1></main>)
+  }
+
   return (
     <main>
       <div className="form-container">
@@ -14,6 +29,7 @@ const Login = () => {
           <div className="input-group">
             <label htmlFor="email">Email</label>
             <input
+            onChange={(e)=>{setEmail(e.target.value)}}
               type="email"
               name="email"
               id="email"
@@ -23,6 +39,7 @@ const Login = () => {
           <div className="input-group">
             <label htmlFor="password">Password</label>
             <input
+            onChange={(e)=>{setPassword(e.target.value)}}
               type="password"
               name="password"
               id="password"
@@ -31,7 +48,7 @@ const Login = () => {
           </div>
           <button className="button Primary-button">Login</button>
         </form>
-        <p>Don't have an account ? <Link to={"/Register"}>Register</Link></p>
+        <p>Don't have an account ? <Link to={"/register"}>Register</Link></p>
       </div>
     </main>
   );
